@@ -1,0 +1,15 @@
+cybergear_one_leg_controller:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+
+  # Position Controllers --------------------------------------
+  joint_hy_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint_hy
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint_knee_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint_knee
+    pid: {p: 100.0, i: 0.01, d: 10.0}

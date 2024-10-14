@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<robot name="cybergear_one_leg" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find cybergear_one_leg_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find cybergear_one_leg_description)/urdf/cybergear_one_leg.trans" />
+<xacro:include filename="$(find cybergear_one_leg_description)/urdf/cybergear_one_leg.gazebo" />
+<link name="base_link">
+  <inertial>
+    <origin xyz="0.0002819920937144005 0.015839426830908936 1.1514529854865785e-05" rpy="0 0 0"/>
+    <mass value="0.31861004240365326"/>
+    <inertia ixx="0.000126" iyy="0.000213" izz="0.00013" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://cybergear_one_leg_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://cybergear_one_leg_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="uleg_1">
+  <inertial>
+    <origin xyz="-0.010595257498656998 -0.033951385417500785 0.0012442950145930855" rpy="0 0 0"/>
+    <mass value="0.4855306568273375"/>
+    <inertia ixx="0.000326" iyy="0.000864" izz="0.000783" ixy="-0.000108" iyz="1.2e-05" ixz="2.9e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0 -0.0 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://cybergear_one_leg_description/meshes/uleg_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0 -0.0 0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://cybergear_one_leg_description/meshes/uleg_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="lleg_1">
+  <inertial>
+    <origin xyz="0.029382679354009608 -0.006951791165447925 -0.09243709675891992" rpy="0 0 0"/>
+    <mass value="0.097550817276456"/>
+    <inertia ixx="0.000328" iyy="0.000357" izz="3.6e-05" ixy="-0.0" iyz="0.0" ixz="7.8e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.15 0.048 0.000261" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://cybergear_one_leg_description/meshes/lleg_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.15 0.048 0.000261" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://cybergear_one_leg_description/meshes/lleg_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="joint_hy" type="continuous">
+  <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="uleg_1"/>
+  <axis xyz="0.0 -1.0 -0.0"/>
+</joint>
+
+<joint name="joint_knee" type="revolute">
+  <origin xyz="-0.15 -0.048 -0.000261" rpy="0 0 0"/>
+  <parent link="uleg_1"/>
+  <child link="lleg_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+  <limit upper="0.698132" lower="-1.745329" effort="100" velocity="100"/>
+</joint>
+
+</robot>
