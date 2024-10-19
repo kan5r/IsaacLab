@@ -6,6 +6,7 @@
 """Configuration for cybergear one leg robot."""
 
 
+import numpy as np
 import omni.isaac.lab.sim as sim_utils
 from omni.isaac.lab.actuators import ImplicitActuatorCfg
 from omni.isaac.lab.assets import ArticulationCfg
@@ -16,7 +17,8 @@ from omni.isaac.lab.assets import ArticulationCfg
 
 CYBERGEAR_ONELEG_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path="/workspace/cybergear_one_leg_description/usd/cybergear_one_leg_with_slider_v2.usd",
+        usd_path="/workspace/IsaacLab/cybergear_one_leg_description/usd/cybergear_one_leg_with_slider_v2.usd",
+        activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             rigid_body_enabled=True,
             max_linear_velocity=1000.0,
@@ -34,19 +36,31 @@ CYBERGEAR_ONELEG_CFG = ArticulationCfg(
     ),
     init_state=ArticulationCfg.InitialStateCfg(
         pos=(0.0, 0.0, 0.2), 
-        joint_pos={"slider": 0.0, "joint_hy": 0.0, "joint_knee": 0.0}
+        joint_pos={
+            "joint_slider": 0.0, 
+            "joint_hy": 0.0, 
+            "joint_knee": 55.0 * np.pi / 180.0
+        }
     ),
     actuators={
+        "slider_actuator": ImplicitActuatorCfg(
+            joint_names_expr=["joint_slider"],
+            effort_limit=400.0,
+            velocity_limit=100.0,
+            stiffness=0,
+            damping=0.1,
+            friction=10.0
+        ),
         "hy_actuator": ImplicitActuatorCfg(
             joint_names_expr=["joint_hy"],
-            effort_limit=10.0,
+            effort_limit=8.0,
             velocity_limit=100.0,
-            stiffness=5,
+            stiffness=5.0,
             damping=0.5,
         ),
         "knee_actuator": ImplicitActuatorCfg(
             joint_names_expr=["joint_knee"], 
-            effort_limit=10.0, 
+            effort_limit=8.0, 
             velocity_limit=100.0, 
             stiffness=5.0,
             damping=0.5
