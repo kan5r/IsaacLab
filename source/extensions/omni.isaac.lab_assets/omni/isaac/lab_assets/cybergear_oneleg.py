@@ -39,7 +39,7 @@ CYBERGEAR_ONELEG_CFG = ArticulationCfg(
         joint_pos={
             "joint_slider": 0.0, 
             "joint_hy": 0.0, 
-            "joint_knee": 55.0 * np.pi / 180.0
+            "joint_knee": 40.0 * np.pi / 180.0
         }
     ),
     actuators={

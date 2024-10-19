@@ -85,6 +85,7 @@ class CybergearOneLegEnvCfg(DirectRLEnvCfg):
     events: EventCfg = EventCfg()
 
     # reward scales
+    rew_scale_a = 0.1
     rew_scale_g = 1.0
     rew_scale_h = -1.0
     rew_scale_j = -0.02
@@ -134,9 +135,7 @@ class CybergearOneLegEnv(DirectRLEnv):
         self._actions = self.cfg.action_scale * actions.clone()
 
     def _apply_action(self):
-        print(self._actions)
-        # self._robot.set_joint_position_tar/get(self._actions, joint_ids=self._actuation_dof_idx)
-        self._robot.set_joint_effort_target(, joint_ids=self._actuation_dof_idx)
+        self._robot.set_joint_position_target(self._actions, joint_ids=self._actuation_dof_idx)
 
     def _get_observations(self) -> dict:
         self._previous_actions = self._actions.clone()
@@ -160,6 +159,8 @@ class CybergearOneLegEnv(DirectRLEnv):
         return observations
 
     def _get_rewards(self) -> torch.Tensor:
+        reward_alive = (1.0 - self.reset_terminated.float())
+
         reward_energy = (
             torch.pow(self._robot.data.joint_vel[:, self._slider_dof_idx[0]], 2)
             + torch.pow(
@@ -219,7 +220,8 @@ class CybergearOneLegEnv(DirectRLEnv):
         )
 
         total_rewrd = (
-            self.cfg.rew_scale_g * reward_energy 
+            self.cfg.rew_scale_a * reward_alive
+            + self.cfg.rew_scale_g * reward_energy 
             + self.cfg.rew_scale_h * reward_height 
             + self.cfg.rew_scale_j * reward_jerky 
             + self.cfg.rew_scale_jp * reward_jp
